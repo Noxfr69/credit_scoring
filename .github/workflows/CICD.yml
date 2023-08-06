@@ -20,10 +20,10 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Give executable permissions to list_requirement.sh
-        run: chmod +x list_requirement.sh
+        run: chmod +x app/list_requirement.sh
 
       - name: Run list_requirement.sh
-        run: ./list_requirement.sh
+        run: ./app/list_requirement.sh
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
