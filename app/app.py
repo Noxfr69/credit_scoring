@@ -21,20 +21,8 @@ def predict():
     prediction = model.predict(data_df)
 
     # Return prediction
-    return jsonify(prediction)
+    return jsonify(prediction.tolist())
 
-
-@app.route('/change_model', methods=['POST'])
-def change_model():
-    global model
-    model_id = request.get_json(force=True)['model_id']
-    model_uri = f"./mlruns/1/{model_id}/artifacts/model"
-    try:
-        new_model = mlflow.pyfunc.load_model(model_uri)
-        model = new_model
-        return jsonify(status='success')
-    except Exception as e:
-        return jsonify(status='failure', error=str(e)), 400
 
 
 if __name__ == '__main__':
