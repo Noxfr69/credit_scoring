@@ -11,10 +11,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Login to DockerHub
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -26,17 +26,18 @@ jobs:
         run: ./list_requirement.sh
 
       - name: Build and push Docker image
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v4
         with:
           context: .
+          file: app/Dockerfile
           push: true
-          tags: your-dockerhub-username/your-repo-name:your-tag
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/credit_scoring:latest
 
       - name: Run unit tests
-        run: docker run --rm your-dockerhub-username/your-repo-name:your-tag python -m unittest discover
+        run: docker run --rm ${{ secrets.DOCKERHUB_USERNAME }}/credit_scoring:latest python -m unittest discover
 
       - name: SSH into EC2 Instance and Update Docker Image
-        uses: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
