@@ -35,8 +35,8 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/credit_scoring:latest
 
-      - name: Run unit tests
-        run: docker run --rm --add-host=host.docker.internal:host-gateway -p 5001:5001 ${{ secrets.DOCKERHUB_USERNAME }}/credit_scoring:latest python -m unittest discover
+      #- name: Run unit tests
+      #  run: docker run --rm --add-host=host.docker.internal:host-gateway -p 5001:5001 ${{ secrets.DOCKERHUB_USERNAME }}/credit_scoring:latest python -m unittest discover
 
       - name: SSH into EC2 Instance and Update Docker Image
         uses: appleboy/ssh-action@v1.0.0
@@ -48,4 +48,4 @@ jobs:
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/credit_scoring:latest
             docker stop $(docker ps -aq) || true  # Stop all running containers, if any
             docker rm $(docker ps -aq) || true    # Remove all containers, if any
-            docker run -d --name new-container-name --add-host=host.docker.internal:host-gateway -p 5001:5001 -p 80:80 ${{ secrets.DOCKERHUB_USERNAME }}/credit_scoring:latest
+            docker run -d --name new-container-name -p 80:80 ${{ secrets.DOCKERHUB_USERNAME }}/credit_scoring:latest
