@@ -1,30 +1,40 @@
 import unittest
-from unittest.mock import patch
+#from unittest.mock import patch
 import pandas as pd
-from flask import json
-from app import app
+import json
+import requests
+
 
 class TestFlaskAPI(unittest.TestCase):
 
-    def setUp(self):
-        app.testing = True
-        self.client = app.test_client()
+    def test_change_model_endpoint_200(self):
+        model_id = "450ae60519ee43fda2402ae292be69d4"
+        # Create data for the POST request
+        data = {"model_id": model_id}
+        response = requests.post('http://127.0.0.1:5001/new_model', data=json.dumps(data), headers={'Content-Type': 'application/json'})
+        self.assertEqual(response.status_code, 200)
+
+    def test_change_model_endpoint_400(self):
+        model_id = None
+        # Create data for the POST request
+        data = {"model_id": model_id}
+        response = requests.post('http://127.0.0.1:5001/new_model', data=json.dumps(data), headers={'Content-Type': 'application/json'})
+        self.assertEqual(response.status_code, 400)
 
     def test_predict_endpoint_with_valid_data(self):
-        with patch('app.mlflow.pyfunc.load_model', return_value=FakeModel()):
-            X = pd.read_csv("./test/X_head", index_col=0)
-            data = X.to_json(orient='split')
-            response = self.client.post('/predict', data=data, content_type='application/json')
-            self.assertEqual(response.status_code, 200)
-            expected_response = [0.0, 1.0, 0.0, 1.0, 0.0]  # assuming your model predicts these values
-            self.assertEqual(json.loads(response.data), expected_response)
+        X = pd.read_csv("./test/X_head", index_col=0)
+        data = X.to_json(orient='split')
+        response = requests.post('http://127.0.0.1:5001/predict', data=data)
+        self.assertEqual(response.status_code, 200)
+        expected_response = [0.0, 1.0, 0.0, 1.0, 0.0]  # assuming your model predicts these values
+        self.assertEqual(response.json(), expected_response)
+
+    def test_get_dataset_version(self):
+        response = requests.get('http://127.0.0.1:5001/version')
+        self.assertEqual(response.json(),"4.1" )
 
 
 
-
-class FakeModel:
-    def predict(self, data):
-        return [0, 1] 
 
 
 if __name__ == '__main__':
