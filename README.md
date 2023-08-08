@@ -20,6 +20,7 @@
     - Mlflow pipeline and model building notebook
     - A notebook to try the API when it's running localy or on AWS 
     - The test and train data
+    - A notebook that explore data drift
 
 - In the App folder you will find everything related to the API
     - app.py the flask app 
