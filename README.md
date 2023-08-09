@@ -14,6 +14,7 @@
         - API server pulls the new image
 
 
+
 ### Repo structure:
 - At the base level you will find
     - 1 A Data aggregation, cleaning and exploration notebook (from kaggle)
@@ -34,3 +35,4 @@
 
 - The Exports folder contain the HTML datadrift POC and is used to store temp graphs
 
+-Add new stuff more more 
