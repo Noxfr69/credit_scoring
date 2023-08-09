@@ -16,11 +16,11 @@
 
 ### Repo structure:
 - At the base level you will find
-    - Data cleaning notebook
-    - Mlflow pipeline and model building notebook
-    - A notebook to try the API when it's running localy or on AWS 
+    - 1 A Data aggregation, cleaning and exploration notebook (from kaggle)
+    - 2 Mlflow pipeline and model building notebook
+    - 3 A notebook to try the API when it's running localy or on AWS 
+    - 4 A notebook that explore data drift
     - The test and train data
-    - A notebook that explore data drift
 
 - In the App folder you will find everything related to the API
     - app.py the flask app 
@@ -31,3 +31,5 @@
     - test_api.py the unittest tests for the api
 
 - .github/workflows you will find the action yaml file
+
+- The Exports folder contain the HTML datadrift POC and is used to store temp graphs
