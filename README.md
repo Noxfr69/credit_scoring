@@ -12,7 +12,7 @@
         - Docker container built and pushed to Docker Hub
         - Connect to the API server `(AWS EC2)` via `SSH`
         - API server pulls the new image
-
+- Change thing here
 
 ### Repo structure:
 - At the base level you will find
