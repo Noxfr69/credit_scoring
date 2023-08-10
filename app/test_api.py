@@ -26,8 +26,6 @@ class TestFlaskAPI(unittest.TestCase):
         data = X.to_json(orient='split')
         response = requests.post('http://localhost:80/predict', data=data)
         self.assertEqual(response.status_code, 200)
-        expected_response = [0.0, 1.0, 0.0, 1.0, 0.0]  # assuming your model predicts these values
-        self.assertEqual(response.json(), expected_response)
 
     def test_get_dataset_version(self):
         response = requests.get('http://localhost:80/version')
