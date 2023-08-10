@@ -27,17 +27,39 @@ def change_model(model_id : str):
 
 @app.route('/predict', methods=['POST'])
 def predict():
+    class WrappedModel:
+        def __init__(self, mlflow_model):
+            self.model = mlflow_model
+
+        def predict(self, X):
+            return self.model.predict(X)
+
+        def predict_proba(self, X):
+            if hasattr(self.model._model_impl, "predict_proba"):
+                return self.model._model_impl.predict_proba(X)
+            else:
+                raise AttributeError("Underlying model does not have a 'predict_proba' method.")
+            
+    global model
     # Get data from POST request
     data = request.get_json(force=True)
 
     # Convert data into pandas DataFrame
     data_df = pd.DataFrame(data=data['data'], columns=data['columns'])
 
-    # Make prediction
+    #Get the predict_proba and predict 
+    wrapped_model = WrappedModel(model)
+    proba = wrapped_model.predict_proba(data_df)
     prediction = model.predict(data_df)
 
+    # wrap them
+    api_answers = []
+    for i in range(0, len(prediction)):
+        api_answer = [prediction[i], proba[i][0], proba[i][1]]
+        api_answers.append(api_answer)
+
     # Return prediction
-    return jsonify(prediction.tolist())
+    return jsonify(api_answers)
 
 @app.route('/version', methods=['GET'])
 def return_version():
@@ -68,4 +90,6 @@ def new_model():
 if __name__ == '__main__':
     change_model('450ae60519ee43fda2402ae292be69d4')
     app.run(host='0.0.0.0', port=5001)
+
+
 
