@@ -23,7 +23,7 @@ class TestFlaskAPI(unittest.TestCase):
 
     def test_predict_endpoint_with_valid_data(self):
         X = pd.read_csv("./test/X_head", index_col=0)
-        data = X.to_json(orient='split')
+        data = X.to_json(orient='records')
         response = requests.post('http://localhost:80/predict', data=data)
         self.assertEqual(response.status_code, 200)
 
