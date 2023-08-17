@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: app #Change the workdir for all run
+        working-directory: Dashboard #Change the workdir for all run
 
     steps:
       - name: Checkout code
@@ -28,7 +28,7 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
-          context: app
+          context: Dashboard
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/dashboard:latest
 
