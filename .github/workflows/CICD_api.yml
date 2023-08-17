@@ -1,0 +1,71 @@
+name: CI/CD workflow
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'app/**'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app #Change the workdir for all run
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Give executable permissions to list_requirement.sh
+        run: chmod +x list_requirement.sh
+
+      - name: Run list_requirement.sh
+        run: ./list_requirement.sh
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: app
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/credit_scoring:latest
+
+      - name: Run unit tests
+        run: |
+          docker run -d --name credit_scoring -p 80:80 ${{ secrets.DOCKERHUB_USERNAME }}/credit_scoring:latest
+          sleep 5
+          docker exec credit_scoring python -m unittest discover
+
+
+      - name: SSH into EC2 Instance and Update Docker Image
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          script: |
+            # Pull the latest image
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/credit_scoring:latest
+
+            # Check if 'my_network' exists, if not create it
+            if ! docker network ls | grep my_network; then
+              docker network create my_network
+            fi
+
+            # Stop and remove specific container
+            docker stop credit_scoring || true  
+            docker rm credit_scoring || true    
+
+            # Run the container attached to the network
+            docker run --network my_network -d --name credit_scoring -p 80:80 ${{ secrets.DOCKERHUB_USERNAME }}/credit_scoring:latest
+
+            # Prune images
+            docker image prune -af
+        

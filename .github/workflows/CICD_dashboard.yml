@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'app/**'
+      - 'Dashboard/**'
 
 jobs:
   build-and-deploy:
@@ -24,11 +24,6 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Give executable permissions to list_requirement.sh
-        run: chmod +x list_requirement.sh
-
-      - name: Run list_requirement.sh
-        run: ./list_requirement.sh
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
@@ -36,12 +31,6 @@ jobs:
           context: app
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/credit_scoring:latest
-
-      - name: Run unit tests
-        run: |
-          docker run -d --name credit_scoring -p 80:80 ${{ secrets.DOCKERHUB_USERNAME }}/credit_scoring:latest
-          sleep 5
-          docker exec credit_scoring python -m unittest discover
 
 
       - name: SSH into EC2 Instance and Update Docker Image
@@ -51,8 +40,20 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           script: |
-            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/credit_scoring:latest
-            docker stop $(docker ps -aq) || true  # Stop all running containers, if any
-            docker rm $(docker ps -aq) || true    # Remove all containers, if any
-            docker run -d --name credit_scoring -p 80:80 ${{ secrets.DOCKERHUB_USERNAME }}/credit_scoring:latest
-            docker image prune -af #remove all images, other than the one in use
+            # Pull the latest dashboard image
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/dashboard:latest
+
+            # Check if 'my_network' exists, if not create it
+            if ! docker network ls | grep my_network; then
+              docker network create my_network
+            fi
+
+            # Stop and remove specific dashboard container
+            docker stop dashboard_container || true  
+            docker rm dashboard_container || true    
+
+            # Run the dashboard container attached to the network
+            docker run --network my_network -d --name dashboard_container -p 5002:5002 ${{ secrets.DOCKERHUB_USERNAME }}/dashboard:latest
+
+            # Prune images
+            docker image prune -af

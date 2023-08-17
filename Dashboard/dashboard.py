@@ -14,7 +14,7 @@ train_data['TARGET'] = 1-train_data['TARGET'] #Make it so 1 is the positive clas
 
 # region API Calls
 def get_global_importance():
-    response = requests.get('http://127.0.0.1:5001/global_importance')
+    response = requests.get('http://credit_scoring:80/api/global_importance')
     if response.status_code == 200:
         with open("Dashboard/assets/shap_summary.png", "wb") as f:
             f.write(response.content)
@@ -22,19 +22,19 @@ def get_global_importance():
 def predict_proba(X1):
     data = X1.to_json(orient='records')
     headers = {'Content-type': 'application/json'}
-    response = requests.post('http://127.0.0.1:5001/predict', data=data, headers=headers)
+    response = requests.post('http://credit_scoring:80/api/predict', data=data, headers=headers)
     return response.json()
 
 def get_force_plot(X1):
     data = X1.to_json(orient='records')
     headers = {'Content-type': 'application/json'}
-    response = requests.post('http://127.0.0.1:5001/get_local_importance', data=data, headers=headers)
+    response = requests.post('http://credit_scoring:80/api/get_local_importance', data=data, headers=headers)
     if response.status_code == 200:
         with open("Dashboard/assets/local_importance.html", "wb") as f:
             f.write(response.content)
 
 def get_threshold():
-    response = requests.get('http://127.0.0.1:5001/threshold')
+    response = requests.get('http://credit_scoring:80/api/threshold')
     if response.status_code == 200:
         return response.json()
 #endregion
@@ -52,6 +52,7 @@ def prepare_data_for_model(df, dataset_version:str):
 
 #region Components:
 app = Dash(__name__, external_stylesheets=[dbc.themes.SANDSTONE])
+app.config.requests_pathname_prefix = '/dashboard/'
 
 title = dcc.Markdown(children='# Prêt à dépenser, octroi de crédit')
 
@@ -280,4 +281,4 @@ def update_bivariate_plot(feature1, feature2, client_id):
 
 
 if __name__ == '__main__':
-    app.run(port=8051, debug=False)
+    app.run(host='0.0.0.0', port=5002, debug=False)
