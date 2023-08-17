@@ -99,7 +99,7 @@ graph_feature2 = dcc.Graph(id="graph_feature2", figure={})# distribution of the 
 graph_bivariate = dcc.Graph(id="graph_bivariate", figure={})# bivariate plot of the two class - Put the client on evidence
 #endregion
 
-#Layout:
+#region Layout:
 # App Layout
 app.layout = dbc.Container([
     dbc.Row([
@@ -134,7 +134,7 @@ app.layout = dbc.Container([
         ])
     ])
 ])
-
+#endregion
 
 
 #Callbacks update_client_id
