@@ -13,8 +13,9 @@ col_description = pd.read_csv('./HomeCredit_columns_description.csv', encoding='
 train_data['TARGET'] = 1-train_data['TARGET'] #Make it so 1 is the positive class
 
 # region API Calls
+api_ipv4 = '16.171.250.228'
 def get_global_importance():
-    response = requests.get('http://credit_scoring:80/api/global_importance')
+    response = requests.get(f'http://{api_ipv4}/global_importance')
     if response.status_code == 200:
         with open("Dashboard/assets/shap_summary.png", "wb") as f:
             f.write(response.content)
@@ -22,19 +23,19 @@ def get_global_importance():
 def predict_proba(X1):
     data = X1.to_json(orient='records')
     headers = {'Content-type': 'application/json'}
-    response = requests.post('http://credit_scoring:80/api/predict', data=data, headers=headers)
+    response = requests.post(f'http://{api_ipv4}/predict', data=data, headers=headers)
     return response.json()
 
 def get_force_plot(X1):
     data = X1.to_json(orient='records')
     headers = {'Content-type': 'application/json'}
-    response = requests.post('http://credit_scoring:80/api/get_local_importance', data=data, headers=headers)
+    response = requests.post(f'http://{api_ipv4}/get_local_importance', data=data, headers=headers)
     if response.status_code == 200:
         with open("Dashboard/assets/local_importance.html", "wb") as f:
             f.write(response.content)
 
 def get_threshold():
-    response = requests.get('http://credit_scoring:80/api/threshold')
+    response = requests.get(f'http://{api_ipv4}/threshold')
     if response.status_code == 200:
         return response.json()
 #endregion

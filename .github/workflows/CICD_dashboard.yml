@@ -5,8 +5,7 @@ on:
     branches:
       - main
     paths:
-      #- 'Dashboard/**'
-      - 'Exports/**'
+      - 'Dashboard/**'
 
 jobs:
   build-and-deploy-dashboard:
