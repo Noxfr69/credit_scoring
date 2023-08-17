@@ -52,6 +52,7 @@ def prepare_data_for_model(df, dataset_version:str):
 
 #region Components:
 app = Dash(__name__, external_stylesheets=[dbc.themes.SANDSTONE])
+server = app.server
 
 title = dcc.Markdown(children='# Prêt à dépenser, octroi de crédit')
 
