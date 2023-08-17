@@ -48,17 +48,12 @@ jobs:
             # Pull the latest dashboard image
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/dashboard:latest
 
-            # Check if 'my_network' exists, if not create it
-            if ! docker network ls | grep my_network; then
-              docker network create my_network
-            fi
-
             # Stop and remove specific dashboard container
             docker stop dashboard_container || true  
             docker rm dashboard_container || true    
 
             # Run the dashboard container attached to the network
-            docker run --network my_network -d --name dashboard_container -p 5002:5002 ${{ secrets.DOCKERHUB_USERNAME }}/dashboard:latest
+            docker run -d --name dashboard_container -p 80:80 ${{ secrets.DOCKERHUB_USERNAME }}/dashboard:latest
 
             # Prune images
             docker image prune -af

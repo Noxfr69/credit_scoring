@@ -54,17 +54,12 @@ jobs:
             # Pull the latest image
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/credit_scoring:latest
 
-            # Check if 'my_network' exists, if not create it
-            if ! docker network ls | grep my_network; then
-              docker network create my_network
-            fi
-
             # Stop and remove specific container
             docker stop credit_scoring || true  
             docker rm credit_scoring || true    
 
             # Run the container attached to the network
-            docker run --network my_network -d --name credit_scoring -p 80:80 ${{ secrets.DOCKERHUB_USERNAME }}/credit_scoring:latest
+            docker run -d --name credit_scoring -p 80:80 ${{ secrets.DOCKERHUB_USERNAME }}/credit_scoring:latest
 
             # Prune images
             docker image prune -af
