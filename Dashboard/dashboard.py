@@ -52,7 +52,6 @@ def prepare_data_for_model(df, dataset_version:str):
 
 #region Components:
 app = Dash(__name__, external_stylesheets=[dbc.themes.SANDSTONE])
-app.config.requests_pathname_prefix = '/dashboard/'
 
 title = dcc.Markdown(children='# Prêt à dépenser, octroi de crédit')
 
@@ -281,4 +280,4 @@ def update_bivariate_plot(feature1, feature2, client_id):
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5002, debug=False)
+    app.run(host='0.0.0.0', port=80, debug=False)
