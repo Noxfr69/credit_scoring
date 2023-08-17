@@ -24,6 +24,10 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+          
+      - name: Pull LFS files
+        run: git lfs pull
+
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
