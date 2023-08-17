@@ -21,7 +21,7 @@ current_model_threshold = None
 def change_model(model_id : str):
     global model, model_dataset_version, current_model_id, current_model_threshold
 
-    #set the current model ID and load the model
+    #set the current model ID and load the model 
     current_model_id = model_id
     model_uri = f"./mlruns/1/{model_id}/artifacts/model"
     model = mlflow.pyfunc.load_model(model_uri)
