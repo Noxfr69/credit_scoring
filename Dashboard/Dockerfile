@@ -11,7 +11,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 EXPOSE 5002
 
 # Run gunnicord for the dashboard
-CMD ["gunicorn", "--bind", "0.0.0.0:5002", "dashboard:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:80", "dashboard:app"]
 
 
 
