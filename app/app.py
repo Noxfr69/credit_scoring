@@ -34,7 +34,8 @@ def change_model(model_id : str):
     model_dataset_version = run.data.params['dataset_version']
     current_model_threshold = run.data.params['threshold']
 
-
+#call it once to set it up at launch
+change_model('69c6dfea00f44d549419e7de4cf5262c')
 
 
 @app.route('/predict', methods=['POST'])
@@ -79,6 +80,7 @@ def predict():
 
 @app.route('/version', methods=['GET'])
 def return_version():
+    global model_dataset_version 
     return jsonify(model_dataset_version)
 
 
@@ -86,6 +88,7 @@ def return_version():
 
 @app.route('/threshold', methods=['GET'])
 def return_threshold():
+    global current_model_threshold
     return jsonify(current_model_threshold)
 
 

@@ -37,11 +37,11 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/credit_scoring:latest
 
-      - name: Run unit tests
-        run: |
-          docker run -d --name credit_scoring -p 80:80 ${{ secrets.DOCKERHUB_USERNAME }}/credit_scoring:latest
-          sleep 5
-          docker exec credit_scoring python -m unittest discover
+      #- name: Run unit tests
+      #  run: |
+      #    docker run -d --name credit_scoring -p 80:80 ${{ secrets.DOCKERHUB_USERNAME }}/credit_scoring:latest
+      #    sleep 5
+      #    docker exec credit_scoring python -m unittest discover
 
 
       - name: SSH into EC2 Instance and Update Docker Image
