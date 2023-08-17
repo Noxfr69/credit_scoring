@@ -8,8 +8,8 @@ import plotly.express as px
 import plotly.graph_objs as go
 
 #Load the dataset that we can use locally
-col_description = pd.read_csv('Dashboard/HomeCredit_columns_description.csv', encoding='ISO-8859-1', index_col=0)
-train_data = pd.read_csv("Dashboard/sampled_train_data.csv", index_col=0)
+col_description = pd.read_csv('./HomeCredit_columns_description.csv', encoding='ISO-8859-1', index_col=0)
+train_data = pd.read_csv("./sampled_train_data.csv", index_col=0)
 train_data['TARGET'] = 1-train_data['TARGET'] #Make it so 1 is the positive class
 
 # region API Calls
