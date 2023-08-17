@@ -8,7 +8,7 @@ on:
       - 'Dashboard/**'
 
 jobs:
-  build-and-deploy:
+  build-and-deploy-dashboard:
     runs-on: ubuntu-latest
     defaults:
       run:
