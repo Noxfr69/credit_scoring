@@ -1,7 +1,7 @@
 FROM python:3.10-slim-buster
 
 # Install nginx and supervisord from Debian repo
-RUN apt-get update && apt-get install -y nginx supervisor && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y nginx supervisor && apt-get install -y libgomp1 && rm -rf /var/lib/apt/lists/*
 
 ADD . /app 
 
