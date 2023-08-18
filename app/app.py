@@ -8,9 +8,12 @@ import matplotlib
 matplotlib.use('Agg')
 import io
 import numpy as np
+import logging
+
 
 
 app = Flask(__name__)
+logging.basicConfig(level=logging.DEBUG)
 
 model = None
 model_dataset_version = None
