@@ -13,7 +13,7 @@ col_description = pd.read_csv('./HomeCredit_columns_description.csv', encoding='
 train_data['TARGET'] = 1-train_data['TARGET'] #Make it so 1 is the positive class
 
 # region API Calls
-api_ipv4 = '16.171.250.228'
+api_ipv4 = '3.126.2.101'
 def get_global_importance():
     response = requests.get(f'http://{api_ipv4}/global_importance')
     if response.status_code == 200:
