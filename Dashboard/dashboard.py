@@ -17,7 +17,7 @@ api_ipv4 = '3.126.2.101'
 def get_global_importance():
     response = requests.get(f'http://{api_ipv4}/global_importance')
     if response.status_code == 200:
-        with open("Dashboard/assets/shap_summary.png", "wb") as f:
+        with open("./assets/shap_summary.png", "wb") as f:
             f.write(response.content)
 
 def predict_proba(X1):
@@ -31,7 +31,7 @@ def get_force_plot(X1):
     headers = {'Content-type': 'application/json'}
     response = requests.post(f'http://{api_ipv4}/get_local_importance', data=data, headers=headers)
     if response.status_code == 200:
-        with open("Dashboard/assets/local_importance.html", "wb") as f:
+        with open("./assets/local_importance.html", "wb") as f:
             f.write(response.content)
 
 def get_threshold():
@@ -148,16 +148,6 @@ app.layout = dbc.Container([
     
 )
 def update_client_id(client_id):
-    ctx = callback_context
-    if not ctx.triggered:
-        trigger_id = ctx.triggered[0]['prop_id'].split('.')[0]
-        print(f"Triggered by: {trigger_id}")
-        return no_update
-    else:
-        trigger_id = ctx.triggered[0]['prop_id'].split('.')[0]
-    print(f"Triggered by: {trigger_id}")
-
-
     X1 = train_data[train_data['SK_ID_CURR'] == client_id]
     X1 = prepare_data_for_model(X1, '2.0')
     
@@ -176,10 +166,10 @@ def update_client_id(client_id):
 
     # Get Force Plot
     get_force_plot(X1)
-    with open('Dashboard/assets/local_importance.html', 'r') as file:
+    with open('./assets/local_importance.html', 'r') as file:
         force_plot_content = file.read()
 
-    return class1_proba, scale, '/assets/shap_summary.png', force_plot_content
+    return class1_proba, scale, './assets/shap_summary.png', force_plot_content
 
 
 #Callbacks update_feature1_and_graph
