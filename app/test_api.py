@@ -25,7 +25,7 @@ class TestFlaskAPI(unittest.TestCase):
         self.assertEqual(response.json(),"2.0" )
 
 
-    def test_get_dataset_version(self):
+    def test_get_dataset_threshold(self):
         response = requests.get('http://localhost:80/threshold')
         self.assertEqual(response.json(),"0.1" )
 

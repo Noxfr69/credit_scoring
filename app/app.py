@@ -154,18 +154,10 @@ def local_importance():
     # Create SHAP explainer using the underlying model object
     explainer = shap.TreeExplainer(actual_model)
     shap_values = explainer.shap_values(data_df)
-    shap_html = shap.force_plot(explainer.expected_value[1], shap_values[1][0,:], data_df.iloc[0,:], show=False)
+    shap_html = shap.force_plot(explainer.expected_value[1], shap_values[1][0,:], data_df.iloc[0,:], show=False, link="logit")
     # Save the HTML content to a file
     html_filepath = "./Exports/shap_force_plot.html"
     shap.save_html(html_filepath, shap_html)
-    
-    #buf = io.BytesIO()
-    # Now, create the waterfall plot using both positive_class_shap_values and expected_value
-    #shap.plots.waterfall(shap_values_explaination)
-    #shap.summary_plot(shap_values, data_df, show=False)
-    #plt.savefig(buf, format='png')
-    #buf.seek(0)
-    #return send_file(buf, mimetype='image/png')
     
 
     return send_from_directory(directory='./Exports', path= "./Exports/shap_force_plot.html", filename='shap_force_plot.html')

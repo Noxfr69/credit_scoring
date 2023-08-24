@@ -161,8 +161,9 @@ def update_client_id(client_id):
     # Get threshold 
     threshold = get_threshold()
     goal = (1 - float(threshold))*100
+    goal_label = 'Goal ' + str(goal)
     scale={'start': 0, 'interval': 20,
-                    'labelInterval': 1, 'custom': {str(goal): 'Goal'}}
+                    'labelInterval': 1, 'custom': {str(goal): goal_label}}
 
     # Get Force Plot
     get_force_plot(X1)
